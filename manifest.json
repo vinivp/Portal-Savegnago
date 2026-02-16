@@ -1,0 +1,15 @@
+{
+  "name": "Portal Savegnago Loja 62",
+  "short_name": "Portal 62",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0f2350",
+  "theme_color": "#0f2350",
+  "icons": [
+    {
+      "src": "/imagem/LogoApp.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

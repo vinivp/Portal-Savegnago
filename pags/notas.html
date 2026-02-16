@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/imagem/LogoApp.png">
+    <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
+    <title>Portal Loja 62 - Bloco de Notas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body {
+            background: url('/imagem/FundoBranco.avif') no-repeat center center fixed;
+            background-size: cover; min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        /* CABEÇALHO PADRÃO ALINHADO */
+        .header-top {
+            background: url('/imagem/FundoAzulEscuro.jpg') center center;
+            background-size: cover; height: 80px; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 30px; color: white; border-bottom: 4px solid #cc0000;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo-small { height: 45px; object-fit: contain; }
+        .page-name { font-size: 1.4rem; font-weight: bold; text-transform: uppercase; line-height: 1; }
+
+        .btn-exit { background-color: #cc0000; color: white; text-decoration: none; padding: 6px 20px; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .btn-exit:hover { background-color: #ff0000; }
+
+        /* CONTEÚDO */
+        .main-container { flex: 1; padding: 30px 20px; display: flex; justify-content: center; }
+        
+        .content-box {
+            background: rgba(255, 255, 255, 0.95); width: 100%; max-width: 800px;
+            border-radius: 20px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;
+            display: flex; flex-direction: column;
+        }
+
+        .modulo-title { color: #002855; border-left: 5px solid #cc0000; padding-left: 15px; margin-bottom: 20px; font-size: 1.6rem; }
+
+        /* ÁREA DE TEXTO ESTILO CADERNO */
+        #blocoNotas {
+            flex: 1; width: 100%; min-height: 400px;
+            padding: 20px; border-radius: 12px; border: 2px solid #ddd;
+            font-size: 1.1rem; line-height: 1.6; color: #333;
+            background-color: #fffde7; /* Leve tom amarelado de papel */
+            background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
+            background-size: 100% 1.6em; /* Linhas de caderno */
+            resize: none; outline: none; transition: 0.3s;
+        }
+        #blocoNotas:focus { border-color: #002855; box-shadow: 0 0 10px rgba(0,18,51,0.1); }
+
+        .controles { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .status-save { font-size: 0.85rem; color: #666; font-style: italic; }
+        .btn-limpar { background: #666; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-limpar:hover { background: #333; }
+        .footer { color: white; margin-top: 25px; width: 100%; background: rgba(0, 0, 0, 0.8); padding: 15px; font-size: 0.7rem; text-align: center; border-radius: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <header class="header-top">
+        <div class="header-left">
+            <img src="/imagem/LogoApp.png" alt="Logo" class="logo-small">
+            <span class="page-name">Bloco de Notas</span>
+        </div>
+        <a href="/pags/dashboard.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Menu</a>
+    </header>
+
+    <main class="main-container">
+        <div class="content-box">
+            <h2 class="modulo-title">Minhas Anotações</h2>
+            
+            <textarea id="blocoNotas" placeholder="Comece a digitar suas notas aqui... Elas são salvas automaticamente!"></textarea>
+
+            <div class="controles">
+                <span id="status" class="status-save">Aguardando alteração...</span>
+                <button class="btn-limpar" onclick="apagarConteudoCompleto()">
+                <i class="fas fa-trash-alt"></i> Limpar Tudo
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div class="footer">
+      <P>Copyright &copy; Sem Direitos</P>
+      <p>Não é o Portal Original do Savegnago</p>
+      <P>Criado e Desenvolvido Por Vinicius Viana Cartazista da Loja 62</P>
+    </div>
+
+<script>
+    const textarea = document.getElementById('blocoNotas');
+    const statusLabel = document.getElementById('status');
+
+    // 1. CARREGAR NOTAS AO ABRIR
+    window.addEventListener('DOMContentLoaded', () => {
+        const notasSalvas = localStorage.getItem('notas_loja62');
+        if (notasSalvas) {
+            textarea.value = notasSalvas;
+            statusLabel.innerText = "Notas carregadas com sucesso.";
+        }
+    });
+
+    // 2. SALVAR AO DIGITAR
+    textarea.addEventListener('input', () => {
+        localStorage.setItem('notas_loja62', textarea.value);
+        statusLabel.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Salvando...';
+        
+        // Pequeno delay para mostrar o "Salvo"
+        setTimeout(() => {
+            statusLabel.innerHTML = '<i class="fas fa-check"></i> Tudo salvo!';
+        }, 500);
+    });
+
+    // 3. FUNÇÃO DE LIMPAR (Renomeada para garantir funcionamento)
+    function apagarConteudoCompleto() {
+        const confirmar = confirm("Deseja realmente apagar todas as anotações?");
+        
+        if (confirmar) {
+            // Limpa o campo visual
+            textarea.value = "";
+            // Limpa o banco de dados do navegador
+            localStorage.removeItem('notas_loja62');
+            // Atualiza o status
+            statusLabel.innerText = "O bloco foi esvaziado.";
+            
+            // Efeito visual de foco
+            textarea.focus();
+        }
+    }
+</script>
+</body>
+</html>

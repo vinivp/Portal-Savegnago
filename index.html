@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/imagem/LogoApp.png">
+    <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
+    <title>Portal Savegnago - Loja 62</title>
+    <style>
+        /* --- ESTILOS GERAIS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            /* Caminho atualizado para /imagem/ */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/imagem/frente01loja62.png');
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            color: white; 
+            padding: 15px;
+        }
+
+        .header-title { text-align: center; margin-bottom: 20px; }
+        .header-title h1 { font-size: clamp(1.5rem, 7vw, 2.5rem); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .logo-img { height: clamp(30px, 8vw, 50px); }
+        #subtitulo { font-size: clamp(0.8rem, 4vw, 1.1rem); margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* PAINEL GLASS */
+        .glass-panel {
+            background: rgba(15, 35, 80, 0.6); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            padding: clamp(20px, 5vw, 40px); 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%; 
+            max-width: 450px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+            text-align: center;
+        }
+
+        .hidden { display: none; }
+
+        /* INPUTS */
+        .input-group { display: flex; flex-direction: column; margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; }
+        .input-group input { 
+            width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 1.1rem; 
+            text-align: center; color: #333; font-weight: bold;
+        }
+
+        /* BOTÕES */
+        .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn { 
+            padding: 12px 5px; border-radius: 12px; border: none; font-weight: bold; 
+            cursor: pointer; font-size: 0.85rem; transition: 0.2s; min-height: 48px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-red { background-color: #d63031; color: white; }
+        .btn-green { background-color: #44bd32; color: white; font-size: 1.3rem; }
+        .btn-white { background-color: white; color: #2f3640; }
+        .btn-blue { background-color: #1a237e; color: white; font-size: 1.3rem; }
+
+        .btn:active { transform: scale(0.95); }
+
+        /* TEXTOS ESPECÍFICOS */
+        .message-text { font-size: 1.6rem; font-weight: bold; line-height: 1.3; margin-bottom: 25px; }
+        .info-small { font-size: 0.75rem; margin: 10px 0 20px 0; line-height: 1.4; }
+
+        /* ESTILO DO LOADING OVERLAY */
+    #loading-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(15, 35, 80, 0.9);
+        display: none; /* Escondido por padrão */
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #44bd32; /* Cor verde do Savegnago */
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 20px;
+    }
+
+    .footer {
+      margin-top: 25px; width: 100%; background: rgba(0, 0, 0, 0.8);
+      padding: 15px; font-size: 0.7rem; text-align: center; border-radius: 10px;
+    }
+
+        @media (max-width: 380px) { .button-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="header-title">
+        <h1>Portal <img src="/imagem/Logo_Nome.png" alt="Savegnago" class="logo-img"></h1>
+        <p id="subtitulo">FAÇA SEU LOGIN PARA ACESSAR!</p>
+    </div>
+
+    <div id="tela-login" class="glass-panel">
+        <form id="loginForm">
+            <div class="input-group">
+                <label>CPF:</label>
+                <input type="text" id="cpfInput" placeholder="000.000.000-00" maxlength="14" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>SENHA:</label>
+                <input type="password" placeholder="******">
+            </div>
+            <div class="button-grid">
+                <button type="button" class="btn btn-red" onclick="irParaEmail()">Esqueci a Senha!</button>
+                <button type="submit" class="btn btn-green">Login</button>
+                <button type="button" class="btn btn-red" onclick="irParaEmail()">Esqueci o CPF!</button>
+                <button type="button" class="btn btn-white" onclick="irParaRH()">Primeiro Acesso!</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="tela-rh" class="glass-panel hidden">
+        <div class="message-text">Por Gentileza<br>Procurar a Gerência<br>ou RH de Sua Loja</div>
+        <button class="btn btn-green" style="width: 100%;" onclick="voltar()">Voltar</button>
+    </div>
+
+    <div id="tela-email" class="glass-panel hidden">
+        <div class="input-group">
+            <label style="text-align: center; width: 100%; margin-bottom: 15px;">Digite Seu E-mail</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label style="width: auto;">Email:</label>
+                <input type="email" placeholder="fulano@outlook.com" style="text-align: left; font-size: 1rem;">
+            </div>
+        </div>
+        <p class="info-small">Um E-Mail Será Enviado Com a Senha e o Usuário, Caso o E-mail Informado Seja Válido Conforme Cadastro</p>
+        <button class="btn btn-green" style="width: 100%; margin-bottom: 10px;">Enviar</button>
+        <button class="btn btn-blue" style="width: 100%;" onclick="voltar()">Voltar</button>
+    </div>
+
+    <div class="footer">
+      <P>Copyright &copy; Sem Direitos</P>
+      <p>Não é o Portal Original do Savegnago</p>
+      <P>Criado e Desenvolvido Por Vinicius Viana Cartazista da Loja 62</P>
+    </div>
+
+    <script>
+        const telas = {
+            login: document.getElementById('tela-login'),
+            rh: document.getElementById('tela-rh'),
+            email: document.getElementById('tela-email')
+        };
+        const subtitulo = document.getElementById('subtitulo');
+        const cpfInput = document.getElementById('cpfInput');
+
+        function ocultarTodas() {
+            Object.values(telas).forEach(t => t.classList.add('hidden'));
+        }
+
+        function irParaRH() {
+            ocultarTodas();
+            telas.rh.classList.remove('hidden');
+            subtitulo.innerText = "PRIMEIRO ACESSO?";
+        }
+
+        function irParaEmail() {
+            ocultarTodas();
+            telas.email.classList.remove('hidden');
+            subtitulo.innerText = "ESQUECEU A SENHA OU O CPF";
+        }
+
+        function voltar() {
+            ocultarTodas();
+            telas.login.classList.remove('hidden');
+            subtitulo.innerText = "FAÇA SEU LOGIN PARA ACESSAR!";
+            // Coloca o foco no CPF automaticamente ao voltar
+            cpfInput.focus();
+        }
+
+        // Máscara CPF
+        cpfInput.addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+            else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, "$1.$2");
+            e.target.value = v;
+        });
+
+        // Localiza o formulário de login
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', (e) => {
+         e.preventDefault(); // Impede que a página recarregue
+    
+        // Aqui você pode adicionar o som de clique que criamos antes
+        if (typeof emitirFeedback === "function") emitirFeedback();
+
+        // Redirecionamento direto para a sua nova página
+        window.location.href = "/pags/dashboard.html";
+});
+
+</script>
+
+<style>
+    /* ... (Mante os estilos anteriores do body e glass-panel) ... */
+
+    /* ESTILO DO LOADING OVERLAY */
+    #loading-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(15, 35, 80, 0.9);
+        display: none; /* Escondido por padrão */
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #44bd32; /* Cor verde do Savegnago */
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        color: white;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+</style>
+
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Validando Acesso...</p>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // 1. Mostra o Loading
+        loadingOverlay.style.display = 'flex';
+
+        // 2. Aguarda 1.5 segundos e redireciona
+        setTimeout(() => {
+            window.location.href = "/pags/dashboard.html";
+        }, 1500);
+    });
+
+    // ... (Mantém as tuas funções de irParaRH, irParaEmail e Máscara de CPF) ...
+</script>
+
+</body>
+</html>  
