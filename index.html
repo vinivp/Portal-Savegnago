@@ -8,7 +8,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="/imagem/LogoApp.png">
     <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
-    <title>Portal do Cartazista</title>
+    <title>Portal Savegnago - Loja 62</title>
+    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
     <style>
         /* --- ESTILOS GERAIS --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -277,6 +278,54 @@
     // ... (Mantém as tuas funções de irParaRH, irParaEmail e Máscara de CPF) ...
 </script>
 
-</body>
+<script>
+  /* paste this line in verbatim */
+  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+  /* customize formbutton below*/     
+  formbutton("create", {
+    action: "https://formspree.io/f/xojnlrlb",
+    title: "Suporte do Portal",
+    fields: [
+     {
+        type: "text",
+        label: "Qual o Seu Nome?:",
+        name: "nome",
+        placeholder: "Fulano da Silva",
+      },
+      {
+        type: "text",
+        label: "Qual a Sua Loja?:",
+        name: "loja",
+        placeholder: "Loja 00",
+      },
+      { 
+        type: "email", 
+        label: "Email:", 
+        name: "email",
+        required: true,
+        placeholder: "seu@email.com"
+      },
+      {
+        type: "textarea",
+        label: "Mensagem:",
+        name: "message",
+        placeholder: "Qual sua dúvida?",
+      },
+      { 
+        type: "submit", 
+        label: "Enviar" 
+    }      
+    ],
+    styles: {
+      title: {
+        backgroundColor: "Blue"
+      },
+      button: {
+        backgroundColor: "green"
+      }
+    }
+  });
+</script>
 
+</body>
 </html>  
