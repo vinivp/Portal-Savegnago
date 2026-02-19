@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/imagem/LogoApp.png">
-    <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
-    <title>Simulador 8:48</title>
+    <title>Simulador 8:48 - Loja 62</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         
@@ -127,7 +123,6 @@
       <P>Criado e Desenvolvido Por Vinicius Viana Cartazista da Loja 62</P>
     </div>
 
-
     <script>
         // Converte HH:MM para minutos totais
         function toMin(h) { if(!h) return 0; const [hrs, min] = h.split(':').map(Number); return hrs * 60 + min; }
@@ -227,10 +222,53 @@
             doc.save(`Cronograma_8h48_Loja62.pdf`);
         }
     </script>
+    <script>
+  /* paste this line in verbatim */
+  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+  /* customize formbutton below*/     
+  formbutton("create", {
+    action: "https://formspree.io/f/xojnlrlb",
+    title: "Suporte do Portal",
+    fields: [
+     {
+        type: "text",
+        label: "Qual o Seu Nome?:",
+        name: "nome",
+        placeholder: "Fulano da Silva",
+      },
+      {
+        type: "text",
+        label: "Qual a Sua Loja?:",
+        name: "loja",
+        placeholder: "Loja 00",
+      },
+      { 
+        type: "email", 
+        label: "Email:", 
+        name: "email",
+        required: true,
+        placeholder: "seu@email.com"
+      },
+      {
+        type: "textarea",
+        label: "Mensagem:",
+        name: "message",
+        placeholder: "Qual sua dúvida?",
+      },
+      { 
+        type: "submit", 
+        label: "Enviar" 
+    }      
+    ],
+    styles: {
+      title: {
+        backgroundColor: "Blue"
+      },
+      button: {
+        backgroundColor: "green"
+      }
+    }
+  });
+</script>
 </body>
 </html>
-
-
-
-
-
