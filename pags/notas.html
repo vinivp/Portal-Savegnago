@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
     <title>Portal Loja 62 - Bloco de Notas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         
@@ -89,8 +90,8 @@
     </main>
 
     <div class="footer">
-      <P>Copyright &copy; Sem Direitos</P>
-      <p>Não é o Portal Original do Savegnago</p>
+      <P>Copyright &copy; 2026 || 19/02/2026</P>
+      <p>Desenvolvido Para Uso Exclusivo dos Cartazistas das Redes Savegnago</p>
       <P>Criado e Desenvolvido Por Vinicius Viana Cartazista da Loja 62</P>
     </div>
 
@@ -134,6 +135,54 @@
             textarea.focus();
         }
     }
+</script>
+<script>
+  /* paste this line in verbatim */
+  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+  /* customize formbutton below*/     
+  formbutton("create", {
+    action: "https://formspree.io/f/xojnlrlb",
+    title: "Suporte do Portal",
+    fields: [
+     {
+        type: "text",
+        label: "Qual o Seu Nome?:",
+        name: "nome",
+        placeholder: "Fulano da Silva",
+      },
+      {
+        type: "text",
+        label: "Qual a Sua Loja?:",
+        name: "loja",
+        placeholder: "Loja 00",
+      },
+      { 
+        type: "email", 
+        label: "Email:", 
+        name: "email",
+        required: true,
+        placeholder: "seu@email.com"
+      },
+      {
+        type: "textarea",
+        label: "Mensagem:",
+        name: "message",
+        placeholder: "Qual sua dúvida?",
+      },
+      { 
+        type: "submit", 
+        label: "Enviar" 
+    }      
+    ],
+    styles: {
+      title: {
+        backgroundColor: "Blue"
+      },
+      button: {
+        backgroundColor: "green"
+      }
+    }
+  });
 </script>
 </body>
 </html>
