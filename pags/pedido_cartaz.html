@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido de Cartaz - Loja 62</title>
+    <title>Pedido de Cartaz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: url('/imagem/FundoBranco.avif') no-repeat center center fixed; background-size: cover; min-height: 100vh; display: flex; flex-direction: column; }
@@ -51,7 +52,7 @@
     <header class="header-top">
         <div class="header-left">
             <img src="/imagem/LogoApp.png" alt="Logo" class="logo-small">
-            <span style="font-weight: bold; margin-left: 10px;">PEDIDO DE CARTAZ - LOJA 62</span>
+            <span style="font-weight: bold; margin-left: 10px;">PEDIDO DE CARTAZ </span>
         </div>
         <a href="/pags/dashboard.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Menu</a>
     </header>
@@ -77,6 +78,7 @@
                         <option value="Faixa">Faixa</option>
                         <option value="Faixa Reduzida">Faixa Reduzida</option>
                         <option value="P.A.S.">P.A.S. (1/4 Faixa)</option>
+                        <option value="P.A.S.H.">P.A.S.H. (1/4 Faixa)</option>
                     </select>
                 </div>
             </div>
@@ -118,8 +120,8 @@
     </main>
 
     <div class="footer">
-      <P>Copyright &copy; Sem Direitos</P>
-      <p>Não é o Portal Original do Savegnago</p>
+      <P>Copyright &copy; 2026 || 19/02/2026</P>
+      <p>Desenvolvido Para Uso Exclusivo dos Cartazistas das Redes Savegnago</p>
       <P>Criado e Desenvolvido Por Vinicius Viana Cartazista da Loja 62</P>
     </div>
 
@@ -205,5 +207,54 @@
             doc.save(`Pedidos_Cartazes_L62_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`);
         }
     </script>
+
+    <script>
+  /* paste this line in verbatim */
+  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+  /* customize formbutton below*/     
+  formbutton("create", {
+    action: "https://formspree.io/f/xojnlrlb",
+    title: "Suporte do Portal",
+    fields: [
+     {
+        type: "text",
+        label: "Qual o Seu Nome?:",
+        name: "nome",
+        placeholder: "Fulano da Silva",
+      },
+      {
+        type: "text",
+        label: "Qual a Sua Loja?:",
+        name: "loja",
+        placeholder: "Loja 00",
+      },
+      { 
+        type: "email", 
+        label: "Email:", 
+        name: "email",
+        required: true,
+        placeholder: "seu@email.com"
+      },
+      {
+        type: "textarea",
+        label: "Mensagem:",
+        name: "message",
+        placeholder: "Qual sua dúvida?",
+      },
+      { 
+        type: "submit", 
+        label: "Enviar" 
+    }      
+    ],
+    styles: {
+      title: {
+        backgroundColor: "Blue"
+      },
+      button: {
+        backgroundColor: "green"
+      }
+    }
+  });
+</script>
 </body>
 </html>
