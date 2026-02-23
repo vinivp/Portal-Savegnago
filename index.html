@@ -100,6 +100,43 @@
         margin-bottom: 20px;
     }
 
+        /* ... (Mante os estilos anteriores do body e glass-panel) ... */
+
+    /* ESTILO DO LOADING OVERLAY */
+    #loading-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(15, 35, 80, 0.9);
+        display: none; /* Escondido por padrão */
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #44bd32; /* Cor verde do Savegnago */
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        color: white;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
     .footer {
       margin-top: 25px; width: 100%; background: rgba(0, 0, 0, 0.8);
       padding: 15px; font-size: 0.7rem; text-align: center; border-radius: 10px;
@@ -113,6 +150,7 @@
     <div class="header-title">
         <h1>Portal do Cartazista</h1>
         <p id="subtitulo">FAÇA SEU LOGIN PARA ACESSAR!</p>
+        <p>PODE CLICAR NO BOTÃO "LOGIN" DIRETO PARA ACESSAR</p>
     </div>
 
     <div id="tela-login" class="glass-panel">
@@ -135,7 +173,7 @@
     </div>
 
     <div id="tela-rh" class="glass-panel hidden">
-        <div class="message-text">Por Gentileza<br>Procurar a Gerência<br>ou RH de Sua Loja</div>
+        <div class="message-text">Por Gentileza<br>Procurar o Suporte do Portal</div>
         <button class="btn btn-green" style="width: 100%;" onclick="voltar()">Voltar</button>
     </div>
 
@@ -200,59 +238,9 @@
             e.target.value = v;
         });
 
-        // Localiza o formulário de login
-        const loginForm = document.getElementById('loginForm');
-
-        loginForm.addEventListener('submit', (e) => {
-         e.preventDefault(); // Impede que a página recarregue
-    
-        // Aqui você pode adicionar o som de clique que criamos antes
-        if (typeof emitirFeedback === "function") emitirFeedback();
-
-        // Redirecionamento direto para a sua nova página
-        window.location.href = "/pags/dashboard.html";
-});
+// Removed - loginForm is already declared below
 
 </script>
-
-<style>
-    /* ... (Mante os estilos anteriores do body e glass-panel) ... */
-
-    /* ESTILO DO LOADING OVERLAY */
-    #loading-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(15, 35, 80, 0.9);
-        display: none; /* Escondido por padrão */
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        backdrop-filter: blur(10px);
-    }
-
-    .spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: #44bd32; /* Cor verde do Savegnago */
-        animation: spin 1s ease-in-out infinite;
-        margin-bottom: 20px;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    .loading-text {
-        color: white;
-        font-weight: bold;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-    }
-</style>
 
 <div id="loading-overlay">
     <div class="spinner"></div>
@@ -260,11 +248,13 @@
 </div>
 
 <script>
-    const loginForm = document.getElementById('loginForm');
     const loadingOverlay = document.getElementById('loading-overlay');
+    const loginForm = document.getElementById('loginForm');
 
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        
+        if (typeof emitirFeedback === "function") emitirFeedback();
         
         // 1. Mostra o Loading
         loadingOverlay.style.display = 'flex';
@@ -274,8 +264,6 @@
             window.location.href = "/pags/dashboard.html";
         }, 1500);
     });
-
-    // ... (Mantém as tuas funções de irParaRH, irParaEmail e Máscara de CPF) ...
 </script>
 
 <script>
@@ -290,12 +278,14 @@
         type: "text",
         label: "Qual o Seu Nome?:",
         name: "nome",
+        required: true,
         placeholder: "Fulano da Silva",
       },
       {
         type: "text",
         label: "Qual a Sua Loja?:",
         name: "loja",
+        required: true,
         placeholder: "Loja 00",
       },
       { 
@@ -309,6 +299,7 @@
         type: "textarea",
         label: "Mensagem:",
         name: "message",
+        required: true,
         placeholder: "Qual sua dúvida?",
       },
       { 
