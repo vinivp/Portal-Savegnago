@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador 8:48 - Loja 62</title>
+
+    <script>
+        if (sessionStorage.getItem('logado') !== 'true') {
+            window.location.href = "../index.html";
+        }
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         
@@ -26,9 +33,31 @@
         }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .logo-small { height: 45px; object-fit: contain; display: block; }
-        .page-name { font-size: 1.4rem; font-weight: bold; text-transform: uppercase; line-height: 1; }
-
-        .btn-home { color: white; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+        
+        /* 2. ÁREA DO USUÁRIO NO TOPO DIREITO */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .user-name {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        .btn-home { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.9rem; 
+        }
+        .btn-home:hover { color: #44bd32; }
 
         .main-container { flex: 1; padding: 20px; display: flex; justify-content: center; align-items: flex-start; }
 
@@ -49,7 +78,6 @@
         .input-group input:focus { border-color: #44bd32; background: rgba(255,255,255,0.2); }
         .input-group select option { background: #001233; color: white; }
 
-        /* PAINEL DE RESULTADOS E TRAVAS */
         .prediction-panel { 
             background: rgba(255,255,255,0.1); border-radius: 15px; 
             padding: 20px; margin-top: 10px; display: none; border-left: 5px solid #44bd32;
@@ -70,6 +98,7 @@
         .footer { color: white; margin-top: 25px; width: 100%; background: rgba(0, 0, 0, 0.8); padding: 15px; font-size: 0.7rem; text-align: center; border-radius: 10px; }
     </style>
 </head>
+
 <body>
 
     <header class="header-top">
@@ -77,7 +106,11 @@
             <img src="/imagem/LogoApp.png" alt="Logo" class="logo-small">
             <span style="font-weight: bold; margin-left: 10px;">Simulador 8h48m</span>
         </div>
-        <a href="/pags/dashboard.html" class="btn-home"><i class="fas fa-home"></i>Menu</a>
+        
+        <div class="header-right">
+            <span class="user-name" id="userDisplay">Carregando...</span>
+            <a href="/pags/dashboard.html" class="btn-home"><i class="fas fa-home"></i> Menu</a>
+        </div>
     </header>
 
     <main class="main-container">
@@ -124,10 +157,17 @@
     </div>
 
     <script>
-        // Converte HH:MM para minutos totais
+        // 3. SCRIPT PARA CARREGAR O NOME DO USUÁRIO
+        window.addEventListener('DOMContentLoaded', () => {
+            const nome = sessionStorage.getItem('nomeUsuario');
+            if (nome) {
+                document.getElementById('userDisplay').innerText = nome;
+            }
+        });
+
+        // FUNÇÕES DE CÁLCULO
         function toMin(h) { if(!h) return 0; const [hrs, min] = h.split(':').map(Number); return hrs * 60 + min; }
         
-        // Converte minutos totais para HH:MM
         function fromMin(m) { 
             const h = Math.floor(m / 60) % 24;
             const min = m % 60;
@@ -148,36 +188,30 @@
                 painel.style.display = 'block';
                 const trabalhadoAteAgora = sAlm - ent;
 
-                // --- SISTEMA DE TRAVAS (REGRAS CLT / SAVEGNAGO) ---
                 let erro = "";
                 if (trabalhadoAteAgora < 120) {
-                    erro = "BLOQUEADO: Almoço deve ser após 2h de trabalho.";
+                    erro = "BLOQUEADO: Almoço após 2h de trabalho.";
                 } else if (trabalhadoAteAgora > 360) {
-                    erro = "BLOQUEADO: Máximo de 6h sem intervalo excedido.";
+                    erro = "BLOQUEADO: Máximo de 6h excedido.";
                 }
 
                 if (erro !== "") {
-                    // Estado de Erro/Trava
                     status.style.background = "#cc0000";
                     status.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${erro}`;
                     corpo.style.opacity = "0.2";
                     btn.disabled = true;
-                    painel.style.borderLeftColor = "#cc0000";
                     return;
                 }
 
-                // Estado de Sucesso
                 status.style.background = "#44bd32";
                 status.innerHTML = `<i class="fas fa-check-circle"></i> Horários dentro das Normas`;
                 corpo.style.opacity = "1";
                 btn.disabled = false;
-                painel.style.borderLeftColor = "#44bd32";
 
-                // Cálculos Finais (Jornada 8h48 = 528 min)
                 const retorno = sAlm + tAlm;
                 const tempoRestante = 528 - trabalhadoAteAgora;
                 const saidaFinal = retorno + tempoRestante;
-                const descansoMinimo = saidaFinal + 660; // 11h de descanso
+                const descansoMinimo = saidaFinal + 660; 
 
                 document.getElementById('resRetorno').innerText = fromMin(retorno);
                 document.getElementById('resSaida').innerText = fromMin(saidaFinal);
@@ -189,22 +223,17 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Cabeçalho institucional azul
             doc.setFillColor(0, 18, 51);
             doc.rect(0, 0, 210, 45, 'F');
             
-            // Título
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(16);
             doc.setFont("helvetica", "bold");
             doc.text("CRONOGRAMA DE TRABALHO - LOJA 62", 105, 30, { align: "center" });
-            doc.setFontSize(10);
-            doc.text("JORNADA PADRÃO: 08:48", 105, 38, { align: "center" });
 
             const dadosTabela = [
                 ["Entrada", document.getElementById('entrada').value],
                 ["Saída para Almoço", document.getElementById('saidaAlmoco').value],
-                ["Duração do Intervalo", document.getElementById('tempoAlmoco').options[document.getElementById('tempoAlmoco').selectedIndex].text],
                 ["RETORNO DO ALMOÇO", document.getElementById('resRetorno').innerText],
                 ["HORA DE IR EMBORA", document.getElementById('resSaida').innerText],
                 ["Próximo Turno Permitido", document.getElementById('resDescanso').innerText]
@@ -215,65 +244,57 @@
                 head: [['Evento de Ponto', 'Horário Previsto']],
                 body: dadosTabela,
                 headStyles: { fillColor: [204, 0, 0], halign: 'center' },
-                theme: 'striped',
-                columnStyles: { 1: { halign: 'center', fontStyle: 'bold' } }
+                theme: 'striped'
             });
 
             doc.save(`Cronograma_8h48_Loja62.pdf`);
         }
     </script>
     <script>
-  /* paste this line in verbatim */
-  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
-  /* customize formbutton below*/     
-  formbutton("create", {
-    action: "https://formspree.io/f/xojnlrlb",
-    title: "Suporte do Portal",
-    fields: [
-     {
-        type: "text",
-        label: "Qual o Seu Nome?:",
-        name: "nome",
-        required: true,
-        placeholder: "Fulano da Silva",
-      },
-      {
-        type: "text",
-        label: "Qual a Sua Loja?:",
-        name: "loja",
-        required: true,
-        placeholder: "Loja 00",
-      },
-      { 
-        type: "email", 
-        label: "Email:", 
-        name: "email",
-        required: true,
-        placeholder: "seu@email.com"
-      },
-      {
-        type: "textarea",
-        label: "Mensagem:",
-        name: "message",
-        required: true,
-        placeholder: "Qual sua dúvida?",
-      },
-      { 
-        type: "submit", 
-        label: "Enviar" 
-    }      
-    ],
-    styles: {
-      title: {
-        backgroundColor: "Blue"
-      },
-      button: {
-        backgroundColor: "green"
-      }
-    }
-  });
-</script>
+        window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+        
+        formbutton("create", {
+            action: "https://formspree.io/f/xojnlrlb",
+            title: "Suporte do Portal",
+            fields: [
+                {
+                    type: "text",
+                    label: "Seu Nome:",
+                    name: "nome",
+                    required: true,
+                    placeholder: sessionStorage.getItem('nomeUsuario') || "Fulano da Silva",
+                },
+                {
+                    type: "text",
+                    label: "Sua Loja:",
+                    name: "loja",
+                    required: true,
+                    placeholder: "Loja 62",
+                },
+                { 
+                    type: "email", 
+                    label: "Email:", 
+                    name: "email",
+                    required: true,
+                    placeholder: "seu@email.com"
+                },
+                {
+                    type: "textarea",
+                    label: "Mensagem:",
+                    name: "message",
+                    required: true,
+                    placeholder: "Qual sua dúvida?",
+                },
+                { 
+                    type: "submit", 
+                    label: "Enviar" 
+                }      
+            ],
+            styles: {
+                title: { backgroundColor: "#0f2350" },
+                button: { backgroundColor: "#44bd32" }
+            }
+        });
+    </script>
 </body>
 </html>
-
-
