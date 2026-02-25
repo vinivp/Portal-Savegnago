@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/imagem/LogoApp.png">
-    <link rel="icon" type="image/png" href="/imagem/LogoApp.png">
-    <title>Portal Loja 62 - Bloco de Notas</title>
+    <title>Bloco de Notas</title>
+
+    <script>
+        if (sessionStorage.getItem('logado') !== 'true') {
+            window.location.href = "../index.html";
+        }
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         
@@ -30,8 +33,29 @@
         .logo-small { height: 45px; object-fit: contain; }
         .page-name { font-size: 1.4rem; font-weight: bold; text-transform: uppercase; line-height: 1; }
 
-        .btn-exit { background-color: #cc0000; color: white; text-decoration: none; padding: 6px 20px; border-radius: 5px; font-weight: bold; transition: 0.3s; }
-        .btn-exit:hover { background-color: #ff0000; }
+        /* 2. NOVA ÁREA DO USUÁRIO NO TOPO DIREITO */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        .user-name {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            color: white;
+        }
+        .btn-home {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-home:hover { color: #44bd32; }
 
         /* CONTEÚDO */
         .main-container { flex: 1; padding: 30px 20px; display: flex; justify-content: center; }
@@ -49,9 +73,9 @@
             flex: 1; width: 100%; min-height: 400px;
             padding: 20px; border-radius: 12px; border: 2px solid #ddd;
             font-size: 1.1rem; line-height: 1.6; color: #333;
-            background-color: #fffde7; /* Leve tom amarelado de papel */
+            background-color: #fffde7; 
             background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
-            background-size: 100% 1.6em; /* Linhas de caderno */
+            background-size: 100% 1.6em; 
             resize: none; outline: none; transition: 0.3s;
         }
         #blocoNotas:focus { border-color: #002855; box-shadow: 0 0 10px rgba(0,18,51,0.1); }
@@ -61,7 +85,6 @@
         .btn-limpar { background: #666; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-limpar:hover { background: #333; }
         .footer { color: white; margin-top: 25px; width: 100%; background: rgba(0, 0, 0, 0.8); padding: 15px; font-size: 0.7rem; text-align: center; border-radius: 10px; }
-
     </style>
 </head>
 <body>
@@ -71,7 +94,11 @@
             <img src="/imagem/LogoApp.png" alt="Logo" class="logo-small">
             <span class="page-name">Bloco de Notas</span>
         </div>
-        <a href="/pags/dashboard.html" style="color:white; text-decoration:none;"><i class="fas fa-home"></i> Menu</a>
+        
+        <div class="header-right">
+            <span class="user-name" id="userDisplay">Carregando...</span>
+            <a href="/pags/dashboard.html" class="btn-home"><i class="fas fa-home"></i> Home</a>
+        </div>
     </header>
 
     <main class="main-container">
@@ -83,7 +110,7 @@
             <div class="controles">
                 <span id="status" class="status-save">Aguardando alteração...</span>
                 <button class="btn-limpar" onclick="apagarConteudoCompleto()">
-                <i class="fas fa-trash-alt"></i> Limpar Tudo
+                    <i class="fas fa-trash-alt"></i> Limpar Tudo
                 </button>
             </div>
         </div>
@@ -98,8 +125,15 @@
     const textarea = document.getElementById('blocoNotas');
     const statusLabel = document.getElementById('status');
 
-    // 1. CARREGAR NOTAS AO ABRIR
+    // 3. CARREGAR NOME E NOTAS AO ABRIR
     window.addEventListener('DOMContentLoaded', () => {
+        // Carrega o Nome do Usuário
+        const nome = sessionStorage.getItem('nomeUsuario');
+        if (nome) {
+            document.getElementById('userDisplay').innerText = nome;
+        }
+
+        // Carrega as Notas
         const notasSalvas = localStorage.getItem('notas_loja62');
         if (notasSalvas) {
             textarea.value = notasSalvas;
@@ -107,85 +141,73 @@
         }
     });
 
-    // 2. SALVAR AO DIGITAR
+    // SALVAR AO DIGITAR
     textarea.addEventListener('input', () => {
         localStorage.setItem('notas_loja62', textarea.value);
         statusLabel.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Salvando...';
         
-        // Pequeno delay para mostrar o "Salvo"
         setTimeout(() => {
             statusLabel.innerHTML = '<i class="fas fa-check"></i> Tudo salvo!';
         }, 500);
     });
 
-    // 3. FUNÇÃO DE LIMPAR (Renomeada para garantir funcionamento)
     function apagarConteudoCompleto() {
         const confirmar = confirm("Deseja realmente apagar todas as anotações?");
-        
         if (confirmar) {
-            // Limpa o campo visual
             textarea.value = "";
-            // Limpa o banco de dados do navegador
             localStorage.removeItem('notas_loja62');
-            // Atualiza o status
             statusLabel.innerText = "O bloco foi esvaziado.";
-            
-            // Efeito visual de foco
             textarea.focus();
         }
     }
 </script>
+
 <script>
-  /* paste this line in verbatim */
-  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
-  /* customize formbutton below*/     
-  formbutton("create", {
-    action: "https://formspree.io/f/xojnlrlb",
-    title: "Suporte do Portal",
-    fields: [
-     {
-        type: "text",
-        label: "Qual o Seu Nome?:",
-        name: "nome",
-        required: true,
-        placeholder: "Fulano da Silva",
-      },
-      {
-        type: "text",
-        label: "Qual a Sua Loja?:",
-        name: "loja",
-        required: true,
-        placeholder: "Loja 00",
-      },
-      { 
-        type: "email", 
-        label: "Email:", 
-        name: "email",
-        required: true,
-        placeholder: "seu@email.com"
-      },
-      {
-        type: "textarea",
-        label: "Mensagem:",
-        name: "message",
-        required: true,
-        placeholder: "Qual sua dúvida?",
-      },
-      { 
-        type: "submit", 
-        label: "Enviar" 
-    }      
-    ],
-    styles: {
-      title: {
-        backgroundColor: "Blue"
-      },
-      button: {
-        backgroundColor: "green"
-      }
-    }
-  });
-</script>
+        window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+        
+        formbutton("create", {
+            action: "https://formspree.io/f/xojnlrlb",
+            title: "Suporte do Portal",
+            fields: [
+                {
+                    type: "text",
+                    label: "Seu Nome:",
+                    name: "nome",
+                    required: true,
+                    placeholder: sessionStorage.getItem('nomeUsuario') || "Fulano da Silva",
+                },
+                {
+                    type: "text",
+                    label: "Sua Loja:",
+                    name: "loja",
+                    required: true,
+                    placeholder: "Loja 62",
+                },
+                { 
+                    type: "email", 
+                    label: "Email:", 
+                    name: "email",
+                    required: true,
+                    placeholder: "seu@email.com"
+                },
+                {
+                    type: "textarea",
+                    label: "Mensagem:",
+                    name: "message",
+                    required: true,
+                    placeholder: "Qual sua dúvida?",
+                },
+                { 
+                    type: "submit", 
+                    label: "Enviar" 
+                }      
+            ],
+            styles: {
+                title: { backgroundColor: "#0f2350" },
+                button: { backgroundColor: "#44bd32" }
+            }
+        });
+    </script>
+
 </body>
 </html>
-
